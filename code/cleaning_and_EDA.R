@@ -13,13 +13,16 @@ movies <- read.csv("data/movies.csv")
 pacman::p_load(dplyr, ggplot2, reshape2, naniar, ggrepel) 
 
 #merge dataframes + drop unnecesssary columns
-df <- merge(ratings, movies, all.x = TRUE) %>% select(c("userId", "title", "rating"))
+df <- merge(ratings, movies, all.x = TRUE) %>% dplyr::select(c("userId", "title", "rating"))
 
 #average ratings if they were rated twice
 df <- df %>% group_by(userId, title) %>% summarize(rating = mean(rating))
 
 #reshape data frame to Users by Movies
 X <- dcast(df, userId ~ title, value.var = "rating")[,-1]
+
+#write.csv(X, "./data/ratings_matrix.csv")
+
 
 #make a films dataframe
 df.popular <- df %>% 
